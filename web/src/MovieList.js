@@ -11,7 +11,7 @@ class MovieList extends Component {
     handlePrevious = (e) => {
         e.preventDefault();
         const newOffset = Math.max(0, this.state.offset - 25);
-        Axios.get(`/movies/${newOffset}`)
+        Axios.get('/api/movies', {params: {offset: newOffset}})
             .then(result => {
                 this.setState({count: result.data.count, offset: newOffset, movies: result.data.rows})
             });
@@ -20,7 +20,7 @@ class MovieList extends Component {
     handleNext = (e) => {
         e.preventDefault();
         const newOffset = Math.min(this.state.count, this.state.offset + 25);
-        Axios.get(`/movies/${newOffset}`)
+        Axios.get('/api/movies', {params: {offset: newOffset}})
             .then(result => {
                 this.setState({count: result.data.count, offset: newOffset, movies: result.data.rows})
             });
@@ -31,7 +31,7 @@ class MovieList extends Component {
     totalPages = () => Math.floor(this.state.count / 25);
 
     componentDidMount() {
-        Axios.get(`/movies/${this.state.offset}`)
+        Axios.get('/api/movies', {params: {offset: this.state.offset}})
             .then(result => {
                 this.setState({count: result.data.count, movies: result.data.rows})
             });
@@ -49,9 +49,12 @@ class MovieList extends Component {
                 <h1>Top Rated Movies</h1>
                 {movieList}
                 <div className='page-container'>
-                    {this.currentPage() > 0 ? <a href='#' onClick={this.handlePrevious}>Previous</a> : <div>Previous</div>}
-                    <div style={{flexGrow: 2, textAlign: "center"}}>Total: {this.state.count}, page {this.currentPage()} of {this.totalPages()}</div>
-                    {this.currentPage() < this.totalPages() ? <a href='#' onClick={this.handleNext}>Next</a> : <div>Next</div>}
+                    {this.currentPage() > 0 ? <a href='#' onClick={this.handlePrevious}>Previous</a> :
+                        <div>Previous</div>}
+                    <div className='page-total'>Total: {this.state.count},
+                        page {this.currentPage()} of {this.totalPages()}</div>
+                    {this.currentPage() < this.totalPages() ? <a href='#' onClick={this.handleNext}>Next</a> :
+                        <div>Next</div>}
                 </div>
             </div>
         );

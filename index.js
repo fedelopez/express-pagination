@@ -9,11 +9,23 @@ const pool = new Pool({
     ssl: process.env.NODE_ENV === 'production'
 });
 
-app.get('/movies/:offset', async (req, res) => {
+app.get('/api/movies/:id', async (req, res) => {
+    const client = await pool.connect();
+    try {
+        const result = await client.query(`SELECT * FROM MOVIES WHERE ID=${req.params.id}`);
+        res.send({...result.rows[0]});
+    } catch (error) {
+        console.error(`Could not retrieve movie with id ${req.params.id} from db`, error);
+        res.send({});
+    }
+    client.release();
+});
+
+app.get('/api/movies', async (req, res) => {
     const client = await pool.connect();
     try {
         const count = await client.query('SELECT COUNT(1) as total from MOVIES');
-        const result = await client.query(`SELECT movie_title, movie_imdb_link, imdb_score FROM MOVIES order by imdb_score desc LIMIT 25 OFFSET ${req.params.offset}`);
+        const result = await client.query(`SELECT movie_title, movie_imdb_link, imdb_score FROM MOVIES order by imdb_score desc LIMIT 25 OFFSET ${req.query.offset}`);
         res.send({count: count.rows[0].total, rows: result.rows});
     } catch (error) {
         console.error('Could not retrieve movies from db', error);
