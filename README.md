@@ -486,3 +486,9 @@ git push heroku master
 heroku open
 ```
 
+## Further reading
+
+- [Getting started with Node JS](https://devcenter.heroku.com/articles/getting-started-with-nodejs?singlepage=true)
+- [Heroku Node JS support](https://devcenter.heroku.com/articles/nodejs-support)
+- [Heroku PostgreSQL](https://devcenter.heroku.com/articles/heroku-postgresql#connecting-in-node-js)
+
