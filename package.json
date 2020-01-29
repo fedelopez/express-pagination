@@ -16,5 +16,8 @@
     "build-web": "yarn --cwd web install && yarn --cwd web build",
     "deploy-web": "cp -a web/build/. public/",
     "heroku-postbuild": "yarn build-web && yarn deploy-web"
+  },
+  "engines": {
+    "node": "13.6.x"
   }
 }
