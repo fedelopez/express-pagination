@@ -15,13 +15,13 @@ yarn init -y
 yarn add express
 ```
 
-Add nodemon:
+Add `nodemon` to reload automatically the server when detecting file changes:
 
 ```bash
 yarn add nodemon -D
 ```
 
-Add a script in `package.json` to run nodemon on `start-dev`: 
+Add a script in `package.json` to run `nodemon` on `start-dev`: 
 
 ```text
 {
@@ -397,7 +397,7 @@ And the `App.js` should look like this:
 ```jsx harmony
 import React from 'react';
 import './App.css';
-import MovieList from "./MovieList";
+import MovieList from './MovieList';
 
 function App() {
     return (
@@ -408,6 +408,121 @@ function App() {
 }
 
 export default App;
+```
+
+### Using routes
+
+```bash
+yarn add react-router-dom
+```
+
+Update the `MovieList` component to allow users navigate to a particular movie:
+
+```text
+const movieList = this.state.movies.map((item, key) =>
+    <div className='movie-row' key={key}>
+        <div className='movie-title'><a href={'/movies/' + item['id']}>{item['movie_title']}</a></div>
+        <div className='movie-score'>{item['imdb_score']}</div>
+    </div>
+);
+```
+
+The `/api/movies` endpoint should return the id of the movie:
+
+```ecmascript 6
+app.get('/api/movies', async (req, res) => {
+    const client = await pool.connect();
+    try {
+        const count = await client.query('SELECT COUNT(1) as total from MOVIES');
+        const result = await client.query(`SELECT movie_title, movie_imdb_link, imdb_score FROM MOVIES order by imdb_score desc LIMIT 25 OFFSET ${req.query.offset}`);
+        res.send({count: count.rows[0].total, rows: result.rows});
+    } catch (error) {
+        console.error('Could not retrieve movies from db', error);
+        res.send({count: 0, rows: []});
+    }
+    client.release();
+});
+```
+
+Let's create a `MovieDetails` component that will retrieve the movie details based on the `id` when mounted:
+
+```jsx harmony
+import React, {Component} from 'react';
+import Axios from 'axios';
+
+class MovieDetails extends Component {
+    state = {
+        movie: undefined
+    };
+
+    componentDidMount() {
+        Axios.get(`/api/movies/${this.props.match.params.id}`)
+            .then((result) => {
+                this.setState({movie: result.data});
+            })
+    }
+
+    render() {
+        return (
+            <div>
+                {this.state.movie ?
+                    <div>
+                        <h1>{this.state.movie.movie_title}</h1>
+                        <p>Directed by: {this.state.movie.director_name}</p>
+                        <p>Year: {this.state.movie.title_year}</p>
+                        <a href={this.state.movie.movie_imdb_link}>IMdB link</a>
+                    </div>
+                    :
+                    <p>No movie details</p>
+                }
+            </div>
+        );
+    }
+}
+
+export default MovieDetails;
+```
+
+We can now update the `App.js` to leverage `react-router-dom` to perform navigation:
+
+```jsx harmony
+import React from 'react';
+import {BrowserRouter as Router, Switch, Route, Link} from 'react-router-dom';
+import './App.css'
+import MovieList from './MovieList';
+import MovieDetails from './MovieDetails';
+
+export default function App() {
+    return (
+        <Router>
+            <div className='app'>
+                <nav>
+                    <ul>
+                        <li>
+                            <Link to="/movies">Movie List</Link>
+                        </li>
+                    </ul>
+                </nav>
+                <Switch>
+                    <Route exact path="/movies/:id" component={MovieDetails} />
+                    <Route exact path="/movies" component={MovieList} />
+                    <Route exact path="/">
+                        <h2>Welcome to the Movie app!</h2>
+                    </Route>
+                </Switch>
+            </div>
+        </Router>
+    );
+}
+```
+
+Lastly, we need to instruct Express to return the `index.html` file whenever a route is not found:
+
+```ecmascript 6
+//make sure this is the last route declared
+app.get('*', function(req, res) {
+    res.sendFile(__dirname + '/public/index.html');
+});
 ```
 
 ## Deploying to Heroku

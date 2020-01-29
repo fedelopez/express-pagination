@@ -40,7 +40,7 @@ class MovieList extends Component {
     render() {
         const movieList = this.state.movies.map((item, key) =>
             <div className='movie-row' key={key}>
-                <div className='movie-title'><a href={item['movie_imdb_link']}>{item['movie_title']}</a></div>
+                <div className='movie-title'><a href={'/movies/' + item['id']}>{item['movie_title']}</a></div>
                 <div className='movie-score'>{item['imdb_score']}</div>
             </div>
         );
