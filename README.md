@@ -83,7 +83,7 @@ source ~/.bashrc
 Create a file named `.envrc` with the following contents:
 
 ```text
-PORT=3001
+export PORT=3001
 ```
 
 now type `direnv allow` when prompted, this will inject the `PORT` variable to the environment and Express will be able to use it.
