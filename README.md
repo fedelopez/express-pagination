@@ -172,7 +172,7 @@ app.get('/api/movies', async (req, res) => {
     const client = await pool.connect();
     try {
         const count = await client.query('SELECT COUNT(1) as total from MOVIES');
-        const result = await client.query(`SELECT movie_title, movie_imdb_link, imdb_score FROM MOVIES order by imdb_score desc LIMIT 25 OFFSET ${req.query.offset}`);
+        const result = await client.query(`SELECT id, movie_title, imdb_score FROM MOVIES order by imdb_score desc LIMIT 25 OFFSET ${req.query.offset}`);
         res.send({count: count.rows[0].total, rows: result.rows});
     } catch (error) {
         console.error('Could not retrieve movies from db', error);
