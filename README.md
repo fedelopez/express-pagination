@@ -516,14 +516,7 @@ export default function App() {
 }
 ```
 
-Lastly, we need to instruct Express to return the `index.html` file whenever a route is not found:
-
-```ecmascript 6
-//make sure this is the last route declared
-app.get('*', function(req, res) {
-    res.sendFile(__dirname + '/public/index.html');
-});
-```
+Note that this setup works in local, but in the cloud we will have to make some changes to serve the React app from Express.
 
 ## Deploying to Heroku
 
@@ -535,6 +528,16 @@ const app = express();
 app.use(express.static('public')); // the React app will be bundled and placed in the public folder
 //...
 ``` 
+
+We also need to instruct Express to return the `index.html` file whenever a route is not found, but we will do that in the next
+section.
+
+```ecmascript 6
+//make sure this is the last route declared
+app.get('*', function(req, res) {
+    res.sendFile(__dirname + '/public/index.html');
+});
+```
 
 Update the `package.json` to look like this:
 
