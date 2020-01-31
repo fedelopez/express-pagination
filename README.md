@@ -83,7 +83,7 @@ source ~/.bashrc
 Create a file named `.envrc` with the following contents:
 
 ```text
-export PORT=3001
+export PORT=3000
 ```
 
 now type `direnv allow` when prompted, this will inject the `PORT` variable to the environment and Express will be able to use it.
@@ -272,7 +272,7 @@ Open the `package.json` from the React app and add a proxy to the Express server
   "version": "0.1.0",
   "private": true,
   ...
-  "proxy": "http://localhost:3001"
+  "proxy": "http://localhost:3000"
 }
 ```
 
@@ -545,10 +545,13 @@ Update the `package.json` to look like this:
     "heroku-postbuild": "yarn build-web && yarn deploy-web"
   },
   "engines": {
-    "node": "13.6.x"
+    "node": "10.16.x"
   }
 }
 ```
+
+**Note** Make sure you supply the correct node engine version used locally.
+This example uses v10.16 but you may be using other versions such as v13.
 
 Create a file named `Procfile` with the following contents:
 

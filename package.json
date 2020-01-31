@@ -18,6 +18,6 @@
     "heroku-postbuild": "yarn build-web && yarn deploy-web"
   },
   "engines": {
-    "node": "13.6.x"
+    "node": "10.16.2"
   }
 }
