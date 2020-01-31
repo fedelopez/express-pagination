@@ -185,13 +185,13 @@ app.get('/api/movies', async (req, res) => {
 Calling the endpoint with an offset of 0 will start from the beginning, returning the first page:
 
 ```bash
-curl http://localhost:3001/movies?offset=0
+curl http://localhost:3000/movies?offset=0
 ```
 
 And calling it with an offset of 25 will return results for the second page:
 
 ```bash
-curl http://localhost:3001/movies?offset=25
+curl http://localhost:3000/movies?offset=25
 ```
 
 ### Exercise: Add new endpoint to return one movie based on its id
@@ -209,7 +209,7 @@ app.get('/api/movies/:id', async (req, res) => {
 When calling the endpoint on `curl`, the result should be like this:
 
 ```bash
-curl http://localhost:3001/movies/1
+curl http://localhost:3000/movies/1
 ```
 
 ```json
