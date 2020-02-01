@@ -254,7 +254,26 @@ Scaffold a new React app on a folder named `web`:
 npx create-react-app web
 ```
 
-Remove any `.git` folder under the `web` directory.
+On the newly created`web` directory, remove the following:
+
+- `.git` folder
+- `.gitignore` file
+
+Make sure your `.gitignore` under the project root file looks like this one:
+
+```text
+node_modules
+build
+public
+!web/public
+.idea
+npm-debug.log
+yarn-debug.log*
+yarn-error.log*
+*.env
+*.dev
+.DS_Store
+```
 
 Add `Axios` as project dependency:
 
